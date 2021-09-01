@@ -1,0 +1,40 @@
+{% extends 'journal/navbar.html' %}
+  
+{% block main %}
+
+  {% if perms.journal.add_usersjournal or perms.journal.add_contactjournal or perms.journal.add_contacttypes %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">
+        {% if table_name == "customers" %}
+          Добавить потребителя
+        {% elif table_name == "orders" %}
+          Добавить обращение
+        {% else %}
+          Добавить тип обращения
+        {% endif %}
+      </h1>
+    </div>
+
+    <div class="mb-3">
+      <form class="needs-validation" action="" method="POST">
+        {% csrf_token %}
+        {% for field in formset %}
+          {{ field.label_tag }}
+          {{ field }}
+        {% endfor %}
+        {% for message in messages %}
+          <hr class="mb-3">
+          <h3 class="h4 text-danger">{{ message }}</h3>
+        {% endfor %}
+        <hr class="mb-3">
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Сохранить запись</button>
+      </form>
+    </div>
+  
+  {% else %}
+    <div class="container">
+      <h1 class="mx-2 my-5 text-muted">У вас нет доступа к содержимому</h1>
+    </div>
+  {% endif %}
+
+{% endblock %}

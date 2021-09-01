@@ -1,0 +1,54 @@
+{% extends 'journal/wrapper.html' %}
+
+{% block title %}
+  <link rel="stylesheet" href="https://getbootstrap.com/docs/4.6/examples/floating-labels/floating-labels.css">
+  <title>Вход</title>
+  <style>
+    code { font-size: 100% }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <form class="form-signin" method="POST">
+    {% csrf_token %}
+    <div class="text-center mb-4">
+      <a href="https://alex-gol.herokuapp.com/ru">
+        <img class="mb-4" src="https://alex-gol.herokuapp.com/static/mainapp/img/codename-alex-logo.jpg" alt="" width="72" height="72">
+      </a>
+      <h1 class="h3 mb-3 font-weight-normal">Журнал входящих вызовов</h1>
+      <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">Данные для входа</h4>
+        <p>Чтобы войти и работать с журналом, воспользуйтесь одной из двух доступных ролей.</p>
+        <hr class="border-warning">
+        <div class="d-flex justify-content-between">
+          <p class="w-100 border-right border-warning mb-0"><b>Манеджер</b><br>Login: <code>manager</code><br>Password: <code>manager123</code></p>
+          <p class="w-100 border-left border-warning mb-0"><b>Оператор</b><br>Login: <code>operator</code><br>Password: <code>operator123</code></p>
+        </div>
+      </div>
+    </div>
+  
+    <div class="form-label-group">
+      <input type="text" id="inputEmail" name="username" class="form-control" placeholder="Login" required="" autofocus="">
+      <label for="inputEmail">Login</label>
+    </div>
+  
+    <div class="form-label-group">
+      <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required="">
+      <label for="inputPassword">Password</label>
+    </div>
+  
+    <div class="checkbox mb-3">
+      {% for message in messages %}
+        <hr class="mb-2">
+        <p class="d-flex justify-content-center align-items-center text-danger">
+          <svg aria-hidden="true" class="mr-1" fill="currentColor" focusable="false" width="16px" height="16px" viewBox="0 0 24 24" xmlns="https://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
+          </svg>
+          {{ message }}
+        </p>
+      {% endfor %}
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
+    <p class="mt-5 mb-3 text-muted text-center">© 2021 • Created by <a href="https://alex-gol.herokuapp.com/ru">Alexander Holubtsov</a></p>
+  </form>
+{% endblock %}

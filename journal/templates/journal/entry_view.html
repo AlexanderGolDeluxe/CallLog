@@ -1,0 +1,137 @@
+{% extends 'journal/navbar.html' %}
+  
+{% block main %}
+  
+  {% if table_name == "customers" %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h2>{{ item.full_user_name }}</h2>
+      <h3 class="m-0 btn-lg text-secondary">Запись №{{ item.id }}</h3>
+    </div>
+    
+    <div class="table-responsive">
+      <p class="lead">Количество заказов: {{ item.amount_orders }}</p>
+      {% if item.user_email %}
+        <p class="lead">Электронная почта: <a href="mailto:{{ item.user_email }}">{{ item.user_email }}</a></p>
+      {% endif %}
+      <p class="lead">Номер телефона: <a href="tel:{{ item.user_phone }}">{{ item.user_phone }}</a></p>
+      {% if item.user_info %}
+        <p class="lead">Сведения о пользователе</p>
+        <p class="p-3 border">{{ item.user_info }}</p>
+      {% endif %}
+      
+      <p class="lead">
+        {% if delete == "delete" and perms.journal.delete_contactjournal %}
+
+          <form class="needs-validation" action="" method="POST">
+            {% csrf_token %}
+            <hr class="mb-3">
+            <p class="lead">Вы уверены, что хотите удалить эту запись?</p>
+            <a class="btn btn-warning" href="{% url 'entry_view' table_name item.id %}">Нет, отмена</a>
+            <button class="btn btn-danger" type="submit">Да, удалить</button>
+          </form>
+
+        {% else %}
+        
+          {% if perms.journal.change_usersjournal %}
+            <a class="btn btn-info" href="{% url 'update_entry' table_name item.id %}">Изменить</a>
+          {% endif %}
+          {% if perms.journal.delete_usersjournal %}
+            <a class="btn btn-danger" href="{% url 'delete_entry' table_name item.id 'delete' %}">Удалить</a>
+          {% endif %}
+        
+        {% endif %}
+      </p>
+    </div>
+
+
+  {% elif table_name == "orders" %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h2>Запись №{{ item.id }}</h2>
+    </div>
+    
+    <div class="table-responsive">
+      <p class="lead">Пользователь: <a href="{% url 'entry_view' 'customers' item.user_name.id %}">{{ item.user_name }}</a></p>
+      <p class="lead">Статус пользователя: {{ item.user_status }}</p>
+      <p class="lead">Оператор: {{ item.staff_name }}</p>
+      <p class="lead">Тип обращения: {{ item.contact_type }}</p>
+      <p class="lead">Дата обращения: {{ item.contact_date }}</p>
+      {% if item.description %}
+        <p class="lead">Описание обращения</p>
+        <p class="p-3 border">{{ item.description }}</p>
+      {% endif %}
+      
+      <p class="lead">
+        {% if delete == "delete" and perms.journal.delete_contactjournal %}
+
+          <form class="needs-validation" action="" method="POST">
+            {% csrf_token %}
+            <hr class="mb-3">
+            <p class="lead">Вы уверены, что хотите удалить эту запись?</p>
+            <a class="btn btn-warning" href="{% url 'entry_view' table_name item.id %}">Нет, отмена</a>
+            <button class="btn btn-danger" type="submit">Да, удалить</button>
+          </form>
+
+        {% else %}
+
+          {% if perms.journal.change_contactjournal %}
+            <a class="btn btn-info" href="{% url 'update_entry' table_name item.id %}">Изменить</a>
+          {% endif %}
+          {% if perms.journal.delete_contactjournal %}
+            <a class="btn btn-danger" href="{% url 'delete_entry' table_name item.id 'delete' %}">Удалить</a>
+          {% endif %}
+        
+        {% endif %}
+      </p>      
+    </div>
+
+
+  {% else %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h2>Тип обращения</h2>
+      <h3 class="m-0 btn-lg text-secondary">№{{ item.id }}</h3>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped table-sm border-bottom">
+        <tbody>
+          <tr>
+            <td class="align-middle">{{ item.type_name }}</td>
+            <td class="align-middle text-right">
+              {% if delete == "delete" and perms.journal.delete_contactjournal %}
+
+                <form class="needs-validation" action="" method="POST">
+                  {% csrf_token %}
+                  <p class="lead mb-0">
+                    Вы уверены, что хотите удалить эту запись?
+                    <a class="ml-1 btn btn-warning" href="{% url 'entry_view' table_name item.id %}">Нет, отмена</a>
+                    <button class="btn btn-danger" type="submit">Да, удалить</button>
+                  </p>
+                </form>
+
+              {% else %}
+
+                {% if perms.journal.change_contacttypes %}
+                <a class="btn btn-info" href="{% url 'update_entry' table_name item.id %}">Изменить</a>
+                {% endif %}
+                {% if perms.journal.delete_contacttypes %}
+                <a class="btn btn-danger" href="{% url 'delete_entry' table_name item.id 'delete' %}">Удалить</a>
+                {% endif %}
+              
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td class="align-middle text-right"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      {% if perms.journal.add_contacttypes %}
+      <div class="text-center">
+        <a class="btn btn-success" href="{% url 'create_entry' table_name %}">Добавить новый тип обращения</a>
+      </div>
+      {% endif %}
+      
+    </div>
+  {% endif %}
+  
+{% endblock %}
